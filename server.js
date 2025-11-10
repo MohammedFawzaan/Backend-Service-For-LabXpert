@@ -7,7 +7,7 @@ const port = process.env.PORT;
 
 initializeSocket(server);
 
-server.listen(port, (req, res) => {
+server.listen(port, () => {
     console.log(`App is Listening on ${port}`);
 });
 

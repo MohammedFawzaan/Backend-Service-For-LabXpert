@@ -8,7 +8,6 @@ import connectMongoDb from './db/mongodb.js';
 import userModel from './models/user.model.js';
 import userRoutes from './routes/user.routes.js';
 import sampleRoutes from './routes/sample.routes.js';
-import recipeRoutes from './routes/recipe.routes.js';
 
 dotenv.config();
 
@@ -58,6 +57,5 @@ passport.use(
 // Hello
 app.use('/api', userRoutes);
 app.use('/api', sampleRoutes);
-app.use('/api', recipeRoutes);
 
 export default app;

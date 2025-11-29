@@ -7,7 +7,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import connectMongoDb from './db/mongodb.js';
 import userModel from './models/user.model.js';
 import userRoutes from './routes/user.routes.js';
-import sampleRoutes from './routes/sample.routes.js';
+import experimentRoutes from './routes/experiment.routes.js';
+import titrationRoutes from './routes/titration.routes.js';
+import distillationRoutes from './routes/distillation.routes.js';
 
 dotenv.config();
 
@@ -16,8 +18,8 @@ const app = express();
 connectMongoDb();
 
 app.use(cors({
-    origin: `${process.env.FRONTEND_URL}`,
-    credentials: true
+  origin: `${process.env.FRONTEND_URL}`,
+  credentials: true
 }));
 
 app.use(express.json());
@@ -54,8 +56,9 @@ passport.use(
   )
 );
 
-// Hello
 app.use('/api', userRoutes);
-app.use('/api', sampleRoutes);
+app.use('/api/experiments', experimentRoutes);
+app.use('/api/titration', titrationRoutes);
+app.use('/api/distillation', distillationRoutes);
 
 export default app;

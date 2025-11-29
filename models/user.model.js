@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  role: { type: String, enum: ["student", "admin"], default: null },
   credits: {
     type: Number,
     default: 5,

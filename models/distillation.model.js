@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 const DistillationRunSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "userModel", required: true },
 
   experimentId: { type: mongoose.Schema.Types.ObjectId, ref: "Experiment", required: true },
   experimentTitle: String,
-  experimentType: { 
+  experimentType: {
     type: String,
-    enum: ["titration", "distillation", "salt-analysis"], 
-    required: true 
+    enum: ["titration", "distillation", "salt-analysis"],
+    required: true
   },
 
   // -----------------------

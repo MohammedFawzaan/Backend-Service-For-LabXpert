@@ -10,6 +10,7 @@ import userRoutes from './routes/user.routes.js';
 import experimentRoutes from './routes/experiment.routes.js';
 import titrationRoutes from './routes/titration.routes.js';
 import distillationRoutes from './routes/distillation.routes.js';
+import saltAnalysisRoutes from './routes/saltanalysis.routes.js';
 
 dotenv.config();
 
@@ -60,5 +61,6 @@ app.use('/api', userRoutes);
 app.use('/api/experiments', experimentRoutes);
 app.use('/api/titration', titrationRoutes);
 app.use('/api/distillation', distillationRoutes);
+app.use('/api/saltanalysis', saltAnalysisRoutes);
 
 export default app;

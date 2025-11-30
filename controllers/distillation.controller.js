@@ -63,7 +63,7 @@ export const addObservation = async (req, res) => {
 
     const obs = {
       message: message || "",
-      time: new Date().toLocaleTimeString(),
+      time: new Date().toISOString(),
     };
 
     run.observations.push(obs);

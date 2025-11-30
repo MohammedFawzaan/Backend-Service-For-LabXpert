@@ -23,6 +23,7 @@ export const startTitrationRun = async (req, res) => {
       userId: req.user._id,
       experimentId,
       experimentTitle: experiment.title,
+      experimentType: "titration",
       startedAt: new Date(),
     });
 
@@ -168,7 +169,7 @@ export const getRunById = async (req, res) => {
       .populate("userId", "firstname lastname email")
       .populate("experimentId", "title");
 
-      console.log(run);
+    console.log(run);
 
     if (!run) return res.status(404).json({ message: "Run not found" });
 

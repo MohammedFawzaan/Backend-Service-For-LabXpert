@@ -12,6 +12,7 @@ const TitrationRunSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "userModel", required: true },
   experimentId: { type: mongoose.Schema.Types.ObjectId, ref: "Experiment", required: true },
   experimentTitle: { type: String },
+  experimentType: { type: String, default: "titration" },
 
   observations: [ObservationSchema],
 

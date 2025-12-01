@@ -57,26 +57,42 @@ router.post("/logout", (req, res) => {
     path: '/'
   });
 
+  res.clearCookie("role", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: '/'
+  });
+
   return res.json({ message: "Logged out" });
 });
 
-router.post("/set-role", async (req, res) => {
-  const { userId, role } = req.body;
-
+router.post("/set-role", authMiddleware, async (req, res) => {
+  const { role } = req.body;
+  const userId = req.user._id;
   if (!["student", "admin"].includes(role)) {
     return res.status(400).json({ message: "Invalid role" });
   }
-
   try {
-    const user = await userModel.findByIdAndUpdate(
-      userId,
-      { role },
-      { new: true }
-    );
-
-    res.json({ message: "Role set successfully", user });
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (user.role) {
+      return res.status(400).json({
+        message: "Role already set. Cannot change again.",
+      });
+    }
+    user.role = role;
+    await user.save();
+    res.cookie("role", role, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    return res.json({ message: "Role set successfully", user });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 

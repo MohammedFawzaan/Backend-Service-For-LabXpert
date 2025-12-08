@@ -1,4 +1,8 @@
 import Experiment from "../models/experiment.model.js";
+import TitrationRun from "../models/titration.model.js";
+import DistillationRun from "../models/distillation.model.js";
+import SaltAnalysisRun from "../models/saltanalysis.model.js";
+import mongoose from "mongoose";
 
 // GET ALLL
 export const getExperiments = async (req, res) => {
@@ -53,24 +57,27 @@ export const getAllExpById = async (req, res) => {
     }
 
     let runs = [];
+    // Ensure experimentId is an ObjectId for querying
+    const expIdObj = new mongoose.Types.ObjectId(experimentId);
 
     // 2. Fetch runs from the correct collection based on type
     if (experiment.type === 'titration') {
-      runs = await TitrationRun.find({ experimentId })
+      runs = await TitrationRun.find({ experimentId: expIdObj })
         .populate("userId", "firstname lastname email")
         .populate("experimentId", "title");
     } else if (experiment.type === 'distillation') {
-      runs = await DistillationRun.find({ experimentId })
+      runs = await DistillationRun.find({ experimentId: expIdObj })
         .populate("userId", "firstname lastname email")
         .populate("experimentId", "title");
     } else if (experiment.type === 'salt-analysis') {
-      runs = await SaltAnalysisRun.find({ experimentId })
+      runs = await SaltAnalysisRun.find({ experimentId: expIdObj })
         .populate("userId", "firstname lastname email")
         .populate("experimentId", "title");
     }
 
     res.status(200).json(runs);
   } catch (err) {
+    console.error("Error in getAllExpById:", err);
     res.status(500).json({ message: "Failed to fetch insights", error: err.message });
   }
 }

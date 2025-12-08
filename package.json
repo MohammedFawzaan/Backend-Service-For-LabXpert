@@ -1,11 +1,11 @@
 {
-  "name": "backend-cookbook",
+  "name": "backend-service",
   "version": "1.0.0",
-  "description": "Backend Service for CookBook Application",
+  "description": "Backend Service for Virtual Chemistry Laboratory",
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "nodemon"
+    "dev": "nodemon"
   },
   "author": "Mohammed Fawzaan",
   "license": "ISC",

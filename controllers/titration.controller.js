@@ -185,3 +185,14 @@ export const getRunById = async (req, res) => {
     res.status(500).json({ message: "Failed to load run", error: err.message });
   }
 };
+
+export const checkIfUserCompletedExperiment = async (req, res) => {
+  try {
+    const { experimentId } = req.params;
+    const run = await TitrationRun.findOne({ userId: req.user._id, experimentId });
+
+    res.status(200).json({ isCompleted: run ? run.isComplete : false, runId: run ? run._id : null });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to check experiment status", error: err.message });
+  }
+}

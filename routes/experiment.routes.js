@@ -7,10 +7,6 @@ import {
   createExperiment,
   deleteExperiment
 } from "../controllers/experiment.controller.js";
-import TitrationRun from "../models/titration.model.js";
-import DistillationRun from "../models/distillation.model.js";
-import SaltAnalysisRun from "../models/saltanalysis.model.js";
-import Experiment from "../models/experiment.model.js";
 
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";

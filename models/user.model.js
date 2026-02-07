@@ -12,22 +12,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    trim: true,
+    lowercase: true,
   },
   googleId: {
     type: String,
     unique: true,
     required: true,
   },
-  role: { type: String, enum: ["student", "admin"], default: null },
+  role: {
+    type: String,
+    enum: ["student", "admin"],
+    default: null
+  },
   credits: {
     type: Number,
     default: 5,
   },
   socketId: {
     type: String,
+    default: null,
   },
-});
+}, { timestamps: true, collection: 'users' });
 
-const userModel = mongoose.model('userModel', userSchema);
+const User = mongoose.model("User", userSchema);
 
-export default userModel;
+export default User;

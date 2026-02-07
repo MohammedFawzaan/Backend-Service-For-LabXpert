@@ -76,6 +76,7 @@ backend/
 <pre>
 PORT=5000
 VITE_BASE_URL=http://localhost:8080
+FRONTEND_URL=http://localhost:8080
 
 # Google OAuth Credentials
 GOOGLE_CLIENT_ID=your_google_client_id

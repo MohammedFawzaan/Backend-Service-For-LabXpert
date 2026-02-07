@@ -6,10 +6,10 @@ const ObservationSchema = new mongoose.Schema({
   volume: { type: Number },
   pH: { type: Number },
   color: { type: String },
-});
+}, { _id: false });
 
-const TitrationRunSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "userModel", required: true },
+const TitrationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   experimentId: { type: mongoose.Schema.Types.ObjectId, ref: "Experiment", required: true },
   experimentTitle: { type: String },
   experimentType: { type: String, default: "titration" },
@@ -26,7 +26,7 @@ const TitrationRunSchema = new mongoose.Schema({
   startedAt: { type: Date, default: Date.now },
   completedAt: { type: Date },
 
-  // computed stats (simple practical metrics)
+  // computed stats
   stats: {
     totalObservations: { type: Number, default: 0 },
     timeTakenSeconds: { type: Number, default: 0 },
@@ -35,4 +35,4 @@ const TitrationRunSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model("TitrationRun", TitrationRunSchema);
+export default mongoose.model("Titration", TitrationSchema);

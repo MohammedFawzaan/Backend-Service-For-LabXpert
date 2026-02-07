@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from '../middlewares/authMiddleware.js'
-import userModel from "../models/user.model.js";
+import User from "../models/user.model.js";
 
 const router = Router();
 
@@ -43,7 +43,7 @@ router.get(
   authMiddleware,
   async (req, res) => {
     if (!req.user) {
-        return res.status(401).json({ authenticated: false });
+      return res.status(401).json({ authenticated: false });
     }
     res.json({ user: req.user, authenticated: true });
   }
@@ -74,7 +74,7 @@ router.post("/set-role", authMiddleware, async (req, res) => {
     return res.status(400).json({ message: "Invalid role" });
   }
   try {
-    const user = await userModel.findById(userId);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

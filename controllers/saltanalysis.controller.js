@@ -22,7 +22,7 @@ export const startSaltAnalysisRun = async (req, res) => {
             experimentType: "salt-analysis",
             startedAt: new Date(),
             observations: [],
-            saltAnalysis: {
+            results: {
                 preliminaryTests: [],
                 confirmatoryTests: [],
                 detectedCation: null,
@@ -56,29 +56,31 @@ export const addObservation = async (req, res) => {
 
         const obs = {
             message: message || "",
-            time: new Date().toLocaleTimeString(),
+            time: new Date(),
         };
 
         run.observations.push(obs);
 
         // Add to specific test arrays based on type
         if (testType === 'preliminary' && testName && result) {
-            run.saltAnalysis.preliminaryTests.push({
+            run.results.preliminaryTests.push({
                 testName,
                 result,
-                timestamp: new Date().toISOString()
+                timestamp: new Date()
             });
         } else if (testType === 'confirmatory' && testName) {
-            run.saltAnalysis.confirmatoryTests.push({
+            run.results.confirmatoryTests.push({
                 testName,
                 reagent: reagent || "",
                 observation: observation || "",
-                timestamp: new Date().toISOString()
+                timestamp: new Date()
             });
         }
 
+        run.markModified('results');
+
         run.stats.totalObservations = run.observations.length;
-        run.stats.totalTests = run.saltAnalysis.preliminaryTests.length + run.saltAnalysis.confirmatoryTests.length;
+        run.stats.totalTests = run.results.preliminaryTests.length + run.results.confirmatoryTests.length;
 
         await run.save();
         res.status(201).json(run);
@@ -103,9 +105,12 @@ export const finalizeRun = async (req, res) => {
         if (!run) return res.status(404).json({ message: "Run not found" });
         if (String(run.userId) !== String(req.user._id)) return res.status(403).json({ message: "Forbidden" });
 
-        run.saltAnalysis.detectedCation = detectedCation || run.saltAnalysis.detectedCation;
-        run.saltAnalysis.detectedAnion = detectedAnion || run.saltAnalysis.detectedAnion;
-        run.saltAnalysis.finalResult = finalResult || run.saltAnalysis.finalResult;
+        run.results.detectedCation = detectedCation || run.results.detectedCation;
+        run.results.detectedAnion = detectedAnion || run.results.detectedAnion;
+        run.results.finalResult = finalResult || run.results.finalResult;
+
+        // Ensure Mongoose detects the change in the nested object
+        run.markModified('results');
 
         run.isComplete = true;
         run.completedAt = new Date();
@@ -113,7 +118,7 @@ export const finalizeRun = async (req, res) => {
         // Compute stats
         run.stats.timeTaken = Math.round((run.completedAt.getTime() - run.startedAt.getTime()) / 1000);
         run.stats.totalObservations = run.observations.length;
-        run.stats.totalTests = run.saltAnalysis.preliminaryTests.length + run.saltAnalysis.confirmatoryTests.length;
+        run.stats.totalTests = run.results.preliminaryTests.length + run.results.confirmatoryTests.length;
 
         await run.save();
         res.status(200).json(run);

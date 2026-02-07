@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const experimentSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  subtitle: { type: String },
+  title: { type: String, required: true, trim: true },
+  subtitle: { type: String, trim: true },
   description: { type: String },
 
   type: {
@@ -15,7 +15,7 @@ const experimentSchema = new mongoose.Schema({
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userModel",
+    ref: "User",
     required: true,
   },
 }, { timestamps: true });

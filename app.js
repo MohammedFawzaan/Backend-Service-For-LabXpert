@@ -5,7 +5,7 @@ import passport from "passport";
 import cookieParser from 'cookie-parser';
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import connectMongoDb from './db/mongodb.js';
-import userModel from './models/user.model.js';
+import User from './models/user.model.js';
 import userRoutes from './routes/user.routes.js';
 import experimentRoutes from './routes/experiment.routes.js';
 import titrationRoutes from './routes/titration.routes.js';
@@ -40,10 +40,10 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await userModel.findOne({ googleId: profile.id });
+        let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
-          user = await userModel.create({
+          user = await User.create({
             googleId: profile.id,
             firstname: profile.name.givenName || "",
             lastname: profile.name.familyName || "",

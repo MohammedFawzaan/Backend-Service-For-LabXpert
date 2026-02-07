@@ -1,24 +1,24 @@
 import mongoose from "mongoose";
 
-const SaltAnalysisRunSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "userModel", required: true },
+const ObservationSchema = new mongoose.Schema({
+    time: { type: Date, default: Date.now },
+    message: { type: String },
+}, { _id: false });
+
+const SaltAnalysisSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     experimentId: { type: mongoose.Schema.Types.ObjectId, ref: "Experiment", required: true },
     experimentTitle: String,
     experimentType: {
         type: String,
         enum: ["titration", "distillation", "salt-analysis"],
-        required: true
+        required: true,
+        default: "salt-analysis"
     },
 
-    // Common fields
-    observations: [
-        {
-            time: String,
-            message: String,
-        }
-    ],
+    observations: [ObservationSchema],
 
-    startedAt: Date,
+    startedAt: { type: Date, default: Date.now },
     completedAt: Date,
     isComplete: { type: Boolean, default: false },
 
@@ -29,12 +29,12 @@ const SaltAnalysisRunSchema = new mongoose.Schema({
     },
 
     // Salt Analysis specific fields
-    saltAnalysis: {
+    results: {
         preliminaryTests: [
             {
                 testName: String,        // e.g., "pH Test", "Flame Test"
                 result: String,          // e.g., "Acidic", "Green Flame"
-                timestamp: String,
+                timestamp: { type: Date, default: Date.now },
             }
         ],
 
@@ -43,7 +43,7 @@ const SaltAnalysisRunSchema = new mongoose.Schema({
                 testName: String,        // e.g., "Ferric Chloride Test", "Barium Chloride Test"
                 reagent: String,         // Reagent used
                 observation: String,     // e.g., "White precipitate formed"
-                timestamp: String,
+                timestamp: { type: Date, default: Date.now },
             }
         ],
 
@@ -54,4 +54,4 @@ const SaltAnalysisRunSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.model("SaltAnalysisRun", SaltAnalysisRunSchema);
+export default mongoose.model("SaltAnalysis", SaltAnalysisSchema);

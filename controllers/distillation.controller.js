@@ -23,7 +23,7 @@ export const startDistillationRun = async (req, res) => {
       experimentType: "distillation",
       startedAt: new Date(),
       observations: [],
-      distillation: {
+      results: {
         initialMixture: {
           componentA: "Ethanol",
           componentB: "Water",
@@ -68,16 +68,16 @@ export const addObservation = async (req, res) => {
 
     run.observations.push(obs);
 
-    // Update distillation specific fields
+    // Update distillation specific results
     if (typeof temperature === 'number') {
-      run.distillation.temperatureProfile.push({
+      run.results.temperatureProfile.push({
         timestamp: new Date().toISOString(),
         temperature
       });
     }
 
     if (typeof collectedVolume === 'number') {
-      run.distillation.totalCollected = collectedVolume;
+      run.results.totalCollected = collectedVolume;
     }
 
     run.stats.totalObservations = run.observations.length;
@@ -106,7 +106,7 @@ export const finalizeRun = async (req, res) => {
     if (!run) return res.status(404).json({ message: "Run not found" });
     if (String(run.userId) !== String(req.user._id)) return res.status(403).json({ message: "Forbidden" });
 
-    run.distillation.totalCollected = typeof totalCollected === "number" ? totalCollected : run.distillation.totalCollected;
+    run.results.totalCollected = typeof totalCollected === "number" ? totalCollected : run.results.totalCollected;
     run.isComplete = true;
     run.completedAt = new Date();
 

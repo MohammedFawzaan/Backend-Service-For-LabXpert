@@ -1,27 +1,24 @@
 import mongoose from "mongoose";
 
-const DistillationRunSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "userModel", required: true },
+const ObservationSchema = new mongoose.Schema({
+  time: { type: Date, default: Date.now },
+  message: { type: String },
+}, { _id: false });
 
+const DistillationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   experimentId: { type: mongoose.Schema.Types.ObjectId, ref: "Experiment", required: true },
   experimentTitle: String,
   experimentType: {
     type: String,
     enum: ["titration", "distillation", "salt-analysis"],
-    required: true
+    required: true,
+    default: "distillation"
   },
 
-  // -----------------------
-  // COMMON FIELDS FOR ALL EXPERIMENTS
-  // -----------------------
-  observations: [
-    {
-      time: String,
-      message: String,
-    }
-  ],
+  observations: [ObservationSchema],
 
-  startedAt: Date,
+  startedAt: { type: Date, default: Date.now },
   completedAt: Date,
   isComplete: { type: Boolean, default: false },
 
@@ -31,18 +28,8 @@ const DistillationRunSchema = new mongoose.Schema({
     totalObservations: Number,
   },
 
-  // ======================================================
-  //               🔥 TITRATION RESULT FIELDS (already done)
-  // ======================================================
-
-  finalVolume: Number,
-  finalPH: Number,
-  color: String,
-
-  // ======================================================
-  //      🔥 DISTILLATION — REALISTIC & PRACTICAL FIELDS
-  // ======================================================
-  distillation: {
+  // Distillation Specific Fields
+  results: {
     initialMixture: {
       componentA: { type: String },   // Example: Ethanol
       componentB: { type: String },   // Example: Water
@@ -52,7 +39,7 @@ const DistillationRunSchema = new mongoose.Schema({
 
     temperatureProfile: [
       {
-        timestamp: String,
+        timestamp: { type: Date, default: Date.now },
         temperature: Number
       }
     ],
@@ -69,17 +56,6 @@ const DistillationRunSchema = new mongoose.Schema({
 
     fractionBreakPoint: Number, // actual transition temperature when mixture shifts A → B
   },
-
-  // ======================================================
-  // 🔥 SALT ANALYSIS (Placeholder)
-  // ======================================================
-  saltAnalysis: {
-    confirmatoryTests: [String],
-    cation: String,
-    anion: String,
-    finalResult: String,
-  }
-
 }, { timestamps: true });
 
-export default mongoose.model("DistillationRun", DistillationRunSchema);
+export default mongoose.model("Distillation", DistillationSchema);
